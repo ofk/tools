@@ -1,4 +1,12 @@
-import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+import {
+  Code,
+  ColorSchemeScript,
+  Container,
+  Flex,
+  mantineHtmlProps,
+  Text,
+  Title,
+} from '@mantine/core';
 import { nprogress } from '@mantine/nprogress';
 import { useEffect } from 'react';
 import {
@@ -78,15 +86,15 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps): React.ReactE
   }
 
   return (
-    <main className="container mx-auto p-4 pt-16">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack ? (
-        <pre className="w-full overflow-x-auto p-4">
-          <code>{stack}</code>
-        </pre>
-      ) : null}
-    </main>
+    <Container>
+      <Flex className="h-dvh items-center justify-center">
+        <div className="text-center">
+          <Title>{message}</Title>
+          <Text>{details}</Text>
+          {stack ? <Code block>{stack}</Code> : null}
+        </div>
+      </Flex>
+    </Container>
   );
 }
 
