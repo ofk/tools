@@ -1,0 +1,51 @@
+{
+  "private": true,
+  "name": "mantine-react-router-github-pages",
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "lint": "npm run typecheck && eslint . && prettier -c . && prettier-package-json -l",
+    "lint-fix": "npm run typecheck && eslint --fix . && prettier -w . && prettier-package-json --write",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@mantine/core": "^7.17.0",
+    "@mantine/form": "^7.17.0",
+    "@mantine/hooks": "^7.17.0",
+    "@mantine/modals": "^7.17.0",
+    "@mantine/notifications": "^7.17.0",
+    "@mantine/nprogress": "^7.17.0",
+    "@react-router/fs-routes": "^7.2.0",
+    "@react-router/node": "^7.2.0",
+    "@react-router/serve": "^7.2.0",
+    "@tabler/icons-react": "^3.30.0",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.2.0"
+  },
+  "devDependencies": {
+    "@ofk/eslint-config-recommend": "^7.1.2",
+    "@react-router/dev": "^7.2.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "eslint": "^9.21.0",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "postcss": "^8.5.3",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.5.2",
+    "prettier-package-json": "^2.8.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "react-router-devtools": "^1.1.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "packageManager": "pnpm@9.15.0+sha256.09a8fe31a34fda706354680619f4002f4ccef6dadff93240d24ef6c831f0fd28"
+}
