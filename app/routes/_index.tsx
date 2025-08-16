@@ -1,8 +1,6 @@
 import { Anchor, Text, Title } from '@mantine/core';
 import { Link } from 'react-router';
 
-import { AppLayout } from '~/components/AppLayout';
-
 import type { Route } from './+types/_index';
 
 export const meta: Route.MetaFunction = () => [
@@ -12,7 +10,7 @@ export const meta: Route.MetaFunction = () => [
 
 export default function Home(): React.ReactElement {
   return (
-    <AppLayout>
+    <>
       <Title mb="xs" order={1}>
         Welcome
       </Title>
@@ -21,6 +19,6 @@ export default function Home(): React.ReactElement {
           About
         </Anchor>
       </Text>
-    </AppLayout>
+    </>
   );
 }

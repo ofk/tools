@@ -21,6 +21,7 @@ import {
 
 import type { Route } from './+types/root';
 
+import { AppLayout } from './components/AppLayout';
 import { RootProvider } from './components/RootProvider';
 
 import '@mantine/core/styles.css';
@@ -116,5 +117,9 @@ export default function App(): React.ReactElement {
     };
   }, [navigation.state]);
 
-  return <Outlet />;
+  return (
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
+  );
 }
