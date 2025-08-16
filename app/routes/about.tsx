@@ -8,10 +8,8 @@ export const meta: Route.MetaFunction = () => [{ title: 'About | New React Route
 export default function About(): React.ReactElement {
   return (
     <>
-      <Title mb="xs" order={1}>
-        About
-      </Title>
-      <Text mb="xs">
+      <Title order={1}>About</Title>
+      <Text>
         <Anchor component={Link} to="/">
           Welcome
         </Anchor>

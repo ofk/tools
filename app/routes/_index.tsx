@@ -11,10 +11,8 @@ export const meta: Route.MetaFunction = () => [
 export default function Home(): React.ReactElement {
   return (
     <>
-      <Title mb="xs" order={1}>
-        Welcome
-      </Title>
-      <Text mb="xs">
+      <Title order={1}>Welcome</Title>
+      <Text>
         <Anchor component={Link} to="/about">
           About
         </Anchor>
