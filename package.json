@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "mantine-react-router-github-pages",
+  "name": "tools",
   "type": "module",
   "scripts": {
     "build": "react-router build",
