@@ -1,22 +1,17 @@
-import { Anchor, Text, Title } from '@mantine/core';
+import { Anchor, List, Title } from '@mantine/core';
 import { Link } from 'react-router';
 
-import type { Route } from './+types/_index';
-
-export const meta: Route.MetaFunction = () => [
-  { title: 'New React Router App' },
-  { content: 'Welcome to React Router!', name: 'description' },
-];
-
-export default function Home(): React.ReactElement {
+export default function HomePage(): React.ReactElement {
   return (
     <>
-      <Title order={1}>Welcome</Title>
-      <Text>
-        <Anchor component={Link} to="/about">
-          About
-        </Anchor>
-      </Text>
+      <Title order={1}>ofktools</Title>
+      <List listStyleType="disc" withPadding>
+        <List.Item>
+          <Anchor component={Link} to="/about">
+            About
+          </Anchor>
+        </List.Item>
+      </List>
     </>
   );
 }

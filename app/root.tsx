@@ -38,6 +38,8 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export const meta: Route.MetaFunction = () => [{ title: 'ofktools' }];
+
 export function Layout({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <html lang="en" {...mantineHtmlProps}>
