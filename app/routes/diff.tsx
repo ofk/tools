@@ -1,39 +1,16 @@
 /* eslint-disable react/no-array-index-key */
 
-import type { ChangeObject } from 'diff';
-
 import { Group, Textarea } from '@mantine/core';
-import { diffChars, diffLines } from 'diff';
-import { useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RichTextarea } from 'rich-textarea';
+
+import type { DiffResult } from '~/shared/diff';
 
 import { Title } from '~/components/Title';
 
 import type { Route } from './+types/diff';
 
 export const meta: Route.MetaFunction = () => [{ title: 'diff ofktools' }];
-
-type DiffObject<T> = { addition: T; deletion: T; type: 'change' } | { common: T; type: 'equal' };
-
-function createDiffObject(changes: ChangeObject<string>[]): DiffObject<string>[] {
-  return changes.reduce<DiffObject<string>[]>((acc, change) => {
-    if (change.added || change.removed) {
-      let lastChange = acc.at(-1);
-      if (lastChange?.type !== 'change') {
-        lastChange = {
-          addition: '',
-          deletion: '',
-          type: 'change',
-        };
-        acc.push(lastChange);
-      }
-      lastChange[change.added ? 'addition' : 'deletion'] += change.value;
-    } else {
-      acc.push({ common: change.value, type: 'equal' });
-    }
-    return acc;
-  }, []);
-}
 
 export default function DiffPage(): React.ReactElement {
   const [inputs, setInputs] = useState([
@@ -67,18 +44,30 @@ Bought a bit of better butter.
 `,
   ]);
 
-  const changes = useMemo(() => {
-    const lineChanges = createDiffObject(diffLines(inputs[0], inputs[1]));
-    const charChanges = lineChanges.map((change) => {
-      if (change.type === 'equal') {
-        return change;
-      }
-      return {
-        changes: createDiffObject(diffChars(change.deletion, change.addition)),
-        type: 'change' as const,
-      };
+  const [result, setResult] = useState<DiffResult>({
+    changes: null,
+    uuid: '',
+  });
+
+  const workerRef = useRef<Worker | null>(null);
+
+  useEffect(() => {
+    workerRef.current = new Worker(new URL('../workers/diff.ts', import.meta.url), {
+      type: 'module',
     });
-    return charChanges;
+    workerRef.current.addEventListener('message', (e) => {
+      const data = e.data as DiffResult;
+      setResult((prevResult) => (prevResult.uuid === data.uuid ? data : prevResult));
+    });
+    return (): void => {
+      workerRef.current?.terminate();
+    };
+  }, []);
+
+  useEffect(() => {
+    const uuid = crypto.randomUUID();
+    setResult((prevResult) => ({ ...prevResult, uuid }));
+    workerRef.current?.postMessage({ inputs, uuid });
   }, [inputs]);
 
   return (
@@ -102,30 +91,35 @@ Bought a bit of better butter.
             >
               {
                 // @ts-expect-error: RichTextareaと型が合わないので、Textareaの型を無視
-                () => (
+                (v: string) => (
                   <>
-                    {changes.map((change, j) => {
-                      if (change.type === 'equal') {
-                        return <div key={j}>{change.common}</div>;
-                      }
-                      return (
-                        <div key={j} style={{ backgroundColor: i === 0 ? '#ffebe9' : '#dafbe1' }}>
-                          {change.changes.map((c, k) => {
-                            if (c.type === 'equal') {
-                              return <span key={k}>{c.common}</span>;
-                            }
-                            return (
-                              <span
-                                key={k}
-                                style={{ backgroundColor: i === 0 ? '#ffcecb' : '#aceebb' }}
-                              >
-                                {c[i === 0 ? 'deletion' : 'addition']}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      );
-                    })}
+                    {result.changes
+                      ? result.changes.map((change, j) => {
+                          if (change.type === 'equal') {
+                            return <div key={j}>{change.common}</div>;
+                          }
+                          return (
+                            <div
+                              key={j}
+                              style={{ backgroundColor: i === 0 ? '#ffebe9' : '#dafbe1' }}
+                            >
+                              {change.changes.map((c, k) => {
+                                if (c.type === 'equal') {
+                                  return <span key={k}>{c.common}</span>;
+                                }
+                                return (
+                                  <span
+                                    key={k}
+                                    style={{ backgroundColor: i === 0 ? '#ffcecb' : '#aceebb' }}
+                                  >
+                                    {c[i === 0 ? 'deletion' : 'addition']}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          );
+                        })
+                      : v}
                   </>
                 )
               }
