@@ -9,6 +9,12 @@ export default config({
       },
     },
     {
+      files: ['app/workers/**'],
+      rules: {
+        'no-restricted-globals': 'off',
+      },
+    },
+    {
       files: ['*.config.ts'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -17,6 +23,6 @@ export default config({
   ],
   ignores: ['.react-router/', 'build/'],
   imports: {
-    defaultExportFiles: ['app/{root,routes}.*', 'app/routes/**'],
+    defaultExportFiles: ['app/{root,routes}.*', 'app/{routes,workers}/**'],
   },
 });

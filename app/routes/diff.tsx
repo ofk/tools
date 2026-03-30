@@ -4,7 +4,7 @@ import { Group, Textarea } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import { RichTextarea } from 'rich-textarea';
 
-import type { DiffResult } from '~/shared/diff';
+import type { DiffChanges, DiffWorkerRequest, DiffWorkerResponse } from '~/shared/diff';
 
 import { Title } from '~/components/Title';
 
@@ -44,20 +44,20 @@ Bought a bit of better butter.
 `,
   ]);
 
-  const [result, setResult] = useState<DiffResult>({
-    changes: null,
-    uuid: '',
-  });
+  const [changes, setChanges] = useState<DiffChanges | null>(null);
 
   const workerRef = useRef<Worker | null>(null);
+  const latestWorkerUuidRef = useRef<string>('');
 
   useEffect(() => {
+    workerRef.current?.terminate();
     workerRef.current = new Worker(new URL('../workers/diff.ts', import.meta.url), {
       type: 'module',
     });
-    workerRef.current.addEventListener('message', (e) => {
-      const data = e.data as DiffResult;
-      setResult((prevResult) => (prevResult.uuid === data.uuid ? data : prevResult));
+    workerRef.current.addEventListener('message', ({ data }: MessageEvent<DiffWorkerResponse>) => {
+      if (data.uuid === latestWorkerUuidRef.current) {
+        setChanges(data.changes);
+      }
     });
     return (): void => {
       workerRef.current?.terminate();
@@ -66,8 +66,8 @@ Bought a bit of better butter.
 
   useEffect(() => {
     const uuid = crypto.randomUUID();
-    setResult((prevResult) => ({ ...prevResult, uuid }));
-    workerRef.current?.postMessage({ inputs, uuid });
+    latestWorkerUuidRef.current = uuid;
+    workerRef.current?.postMessage({ inputs, uuid } satisfies DiffWorkerRequest);
   }, [inputs]);
 
   return (
@@ -93,8 +93,8 @@ Bought a bit of better butter.
                 // @ts-expect-error: RichTextareaと型が合わないので、Textareaの型を無視
                 (v: string) => (
                   <>
-                    {result.changes
-                      ? result.changes.map((change, j) => {
+                    {changes
+                      ? changes.map((change, j) => {
                           if (change.type === 'equal') {
                             return <div key={j}>{change.common}</div>;
                           }

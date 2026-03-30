@@ -11,8 +11,13 @@ export type DiffChanges = (
   | { common: string; type: 'equal' }
 )[];
 
-export interface DiffResult {
-  changes: DiffChanges | null;
+export interface DiffWorkerRequest {
+  inputs: string[];
+  uuid: string;
+}
+
+export interface DiffWorkerResponse {
+  changes: DiffChanges;
   uuid: string;
 }
 
