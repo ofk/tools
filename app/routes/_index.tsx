@@ -13,6 +13,11 @@ export default function HomePage(): React.ReactElement {
             diff
           </Anchor>
         </List.Item>
+        <List.Item>
+          <Anchor component={Link} to="/revisor">
+            revisor
+          </Anchor>
+        </List.Item>
       </List>
     </>
   );
