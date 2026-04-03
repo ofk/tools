@@ -8,6 +8,12 @@ export default config({
         'react-refresh/only-export-components': 'off',
       },
     },
+    {
+      files: ['*.config.ts'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'off',
+      },
+    },
   ],
   ignores: ['.react-router/', 'build/'],
   imports: {
